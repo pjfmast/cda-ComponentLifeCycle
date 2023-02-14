@@ -1,0 +1,80 @@
+﻿@page "/"
+@implements IDisposable
+@implements IAsyncDisposable
+
+<h1>Component Lifecycle</h1>
+<p>Check the browser console (or view 'Output' in Visual Studio) for details...</p>
+
+@code {
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        /*
+         * The process starts with SetParametersAsync being called. 
+         * This is the only life cycle method that requires us to call the base method;
+         * if we don’t, then the component will fail to load. 
+         * This is because the base method does two essential things:
+         *    (1) Sets the values for any parameters the component defines
+         *        This happens both the first time the component is rendered 
+         *        and whenever parameters could have changed.
+         *    (2) Calls the correct life cycle methods
+         *        This depends on whether the component is running for the first time or not
+         */
+        Console.WriteLine("SetParametersAsync - Begin");
+        await base.SetParametersAsync(parameters);
+        Console.WriteLine("SetParametersAsync - End");
+    }
+
+    // Will be called once in component life-time:
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("OnInitialized");
+    }
+
+    // Will be called once in component life-time:
+    // Best practice: api calls to initialize data here
+    protected override async Task OnInitializedAsync()
+    {
+        // first test: no await
+        Console.WriteLine("OnInitializedAsync");
+
+        // second test: async methods:
+        //Console.WriteLine("OnInitializedAsync - begin");
+        //await Task.Delay(300);
+        //Console.WriteLine("OnInitializedAsync - end");
+    }
+
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine("OnParametersSet");
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Console.WriteLine("OnParametersSetAsync");
+    }
+
+    // Primary use of onAfterRender{async} is:
+    // - perform JavaScript interop
+    // - DOM-related operations
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Console.WriteLine($"OnAfterRender (First render: {firstRender})");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        Console.WriteLine($"OnAfterRenderAsync (First render: {firstRender})");
+    }
+
+    public void Dispose()
+    {
+        Console.WriteLine($"Dispose");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        Console.WriteLine($"DisposeAsync");
+    }
+
+}

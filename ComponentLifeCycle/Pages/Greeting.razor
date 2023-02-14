@@ -1,0 +1,24 @@
+﻿@page "/greeting"
+
+@foreach (var word in _greeting)
+{
+    <p>@word</p>
+}
+
+@code {
+
+    List<string> _greeting = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _greeting.Add("Welcome to ");
+
+        await Task.Delay(1000);
+        _greeting.Add("Blazor WebAssembly ");
+        // This is needed to trigger a render
+        //StateHasChanged();
+
+        await Task.Delay(1000);
+        _greeting.Add("Lifecycle events");
+    }
+}
